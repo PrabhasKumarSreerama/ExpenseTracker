@@ -1,15 +1,20 @@
 import express from "express";
 import mongoose from "mongoose";
+
 import cors from "cors";
 
 const PORT = 4000;
 
 const app = express();
 
-app.use(cors);
+app.use(cors());
 
 app.get("/", (req, res) => {
   res.send("Hello EverOne!");
+});
+
+app.get("/transaction", (req, res) => {
+  res.send("Hello World!");
 });
 
 await mongoose.connect(
