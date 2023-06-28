@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 
+const IntialForm = {
+  amount: 0,
+  description: "",
+  date: "",
+};
+
 function App() {
-  const [form, setForm] = useState({
-    amount: 0,
-    description: "",
-    date: "",
-  });
+  const [form, setForm] = useState(IntialForm);
 
   const [transactions, setTransactions] = useState([]);
 
@@ -33,6 +35,7 @@ function App() {
       },
     });
     if (res.ok) {
+      setForm(IntialForm);
       fetchTransactionsHandler();
     }
   };
