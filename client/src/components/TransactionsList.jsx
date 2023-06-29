@@ -7,12 +7,28 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
+import EditNoteRoundedIcon from "@mui/icons-material/EditNoteRounded";
+import DeleteOutlineRoundedIcon from "@mui/icons-material/DeleteOutlineRounded";
+import IconButton from "@mui/material/IconButton";
 
-function createData(name, calories, fat, carbs, protein) {
-  return { name, calories, fat, carbs, protein };
-}
+// function createData(name, calories, fat, carbs, protein) {
+//   return { name, calories, fat, carbs, protein };
+// }
 
-export default function TransactionsList({ transactions }) {
+export default function TransactionsList({
+  transactions,
+  fetchTransactionsHandler,
+}) {
+  const removeHandler = async (id) => {
+    if (!window.confirm("Are you sure?")) return;
+    const res = await fetch(`http://localhost:4000/transaction/${id}`, {
+      method: "DELETE",
+    });
+    if (res.ok) {
+      fetchTransactionsHandler();
+      window.alert("Deleted Successfully");
+    }
+  };
   return (
     <>
       <Typography sx={{ marginTop: 10 }} variant="h6">
@@ -31,7 +47,7 @@ export default function TransactionsList({ transactions }) {
           <TableBody>
             {transactions.map((row) => (
               <TableRow
-                key={row.name}
+                key={row._id}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               >
                 <TableCell align="center" component="th" scope="row">
@@ -40,9 +56,15 @@ export default function TransactionsList({ transactions }) {
                 <TableCell align="center">{row.description}</TableCell>
                 <TableCell align="center">{row.date}</TableCell>
                 <TableCell align="center">
-                  edit
-                  <br />
-                  delete
+                  <IconButton color="secondary">
+                    <EditNoteRoundedIcon />
+                  </IconButton>
+                  <IconButton
+                    color="warning"
+                    onClick={() => removeHandler(row._id)}
+                  >
+                    <DeleteOutlineRoundedIcon sx={{ marginLeft: 1.5 }} />
+                  </IconButton>
                 </TableCell>
               </TableRow>
             ))}

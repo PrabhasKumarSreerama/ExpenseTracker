@@ -22,7 +22,10 @@ function App() {
       <AppBar />
       <Container>
         <TransactionForm fetchTransactionsHandler={fetchTransactionsHandler} />
-        <TransactionsList transactions={transactions} />
+        <TransactionsList
+          transactions={transactions}
+          fetchTransactionsHandler={fetchTransactionsHandler}
+        />
       </Container>
     </div>
   );
