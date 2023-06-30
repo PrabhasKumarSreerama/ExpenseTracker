@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
@@ -9,13 +9,22 @@ import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 import Button from "@mui/material/Button";
 
 const IntialForm = {
-  amount: 0,
+  amount: "",
   description: "",
   date: new Date(),
 };
 
-export default function TransactionForm({ fetchTransactionsHandler }) {
+export default function TransactionForm({
+  fetchTransactionsHandler,
+  editTransaction,
+}) {
   const [form, setForm] = useState(IntialForm);
+
+  useEffect(() => {
+    if (editTransaction.amount !== undefined) {
+      setForm(editTransaction);
+    }
+  }, [editTransaction]);
 
   const handleChange = (event) => {
     setForm({ ...form, [event.target.name]: event.target.value });
@@ -23,6 +32,18 @@ export default function TransactionForm({ fetchTransactionsHandler }) {
 
   const handleSubmitHandler = async (event) => {
     event.preventDefault();
+
+    editTransaction.amount === undefined ? createHandler() : updateHandler();
+  };
+
+  const reload = (res) => {
+    if (res.ok) {
+      setForm(IntialForm);
+      fetchTransactionsHandler();
+    }
+  };
+
+  const createHandler = async () => {
     const res = await fetch("http://localhost:4000/transaction", {
       method: "POST",
       body: JSON.stringify(form),
@@ -30,10 +51,21 @@ export default function TransactionForm({ fetchTransactionsHandler }) {
         "content-type": "application/json",
       },
     });
-    if (res.ok) {
-      setForm(IntialForm);
-      fetchTransactionsHandler();
-    }
+    reload(res);
+  };
+
+  const updateHandler = async () => {
+    const res = await fetch(
+      `http://localhost:4000/transaction/${editTransaction._id}`,
+      {
+        method: "PATCH",
+        body: JSON.stringify(form),
+        headers: {
+          "content-type": "application/json",
+        },
+      }
+    );
+    reload(res);
   };
 
   const handleDate = (newDate) => {
@@ -81,9 +113,16 @@ export default function TransactionForm({ fetchTransactionsHandler }) {
               )}
             />
           </LocalizationProvider>
-          <Button type="submit" variant="contained">
-            Add
-          </Button>
+          {editTransaction.amount !== undefined && (
+            <Button type="submit" variant="outlined">
+              Update
+            </Button>
+          )}
+          {editTransaction.amount === undefined && (
+            <Button type="submit" variant="contained">
+              Add
+            </Button>
+          )}
         </form>
       </CardContent>
     </Card>

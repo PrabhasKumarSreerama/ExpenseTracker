@@ -19,6 +19,11 @@ router.post("/", async (req, res) => {
   res.json({ message: "Success" });
 });
 
+router.patch("/:id", async (req, res) => {
+  await Transaction.updateOne({ _id: req.params.id }, { $set: req.body });
+  res.json({ message: "success" });
+});
+
 router.delete("/:id", async (req, res) => {
   await Transaction.findOneAndDelete({ _id: req.params.id });
   res.json({ message: "success" });

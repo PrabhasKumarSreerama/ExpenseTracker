@@ -10,6 +10,7 @@ import Typography from "@mui/material/Typography";
 import EditNoteRoundedIcon from "@mui/icons-material/EditNoteRounded";
 import DeleteOutlineRoundedIcon from "@mui/icons-material/DeleteOutlineRounded";
 import IconButton from "@mui/material/IconButton";
+import dayjs from "dayjs";
 
 // function createData(name, calories, fat, carbs, protein) {
 //   return { name, calories, fat, carbs, protein };
@@ -18,6 +19,7 @@ import IconButton from "@mui/material/IconButton";
 export default function TransactionsList({
   transactions,
   fetchTransactionsHandler,
+  setEditTransaction,
 }) {
   const removeHandler = async (id) => {
     if (!window.confirm("Are you sure?")) return;
@@ -28,6 +30,9 @@ export default function TransactionsList({
       fetchTransactionsHandler();
       window.alert("Deleted Successfully");
     }
+  };
+  const formatDate = (date) => {
+    return dayjs(date).format("DD MMM,YYYY");
   };
   return (
     <>
@@ -54,9 +59,12 @@ export default function TransactionsList({
                   {row.amount}
                 </TableCell>
                 <TableCell align="center">{row.description}</TableCell>
-                <TableCell align="center">{row.date}</TableCell>
+                <TableCell align="center">{formatDate(row.date)}</TableCell>
                 <TableCell align="center">
-                  <IconButton color="secondary">
+                  <IconButton
+                    color="secondary"
+                    onClick={() => setEditTransaction(row)}
+                  >
                     <EditNoteRoundedIcon />
                   </IconButton>
                   <IconButton

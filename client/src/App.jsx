@@ -6,6 +6,7 @@ import { Container } from "@mui/material";
 
 function App() {
   const [transactions, setTransactions] = useState([]);
+  const [editTransaction, setEditTransaction] = useState({});
 
   useEffect(() => {
     fetchTransactionsHandler();
@@ -21,10 +22,14 @@ function App() {
     <div>
       <AppBar />
       <Container>
-        <TransactionForm fetchTransactionsHandler={fetchTransactionsHandler} />
+        <TransactionForm
+          fetchTransactionsHandler={fetchTransactionsHandler}
+          editTransaction={editTransaction}
+        />
         <TransactionsList
           transactions={transactions}
           fetchTransactionsHandler={fetchTransactionsHandler}
+          setEditTransaction={setEditTransaction}
         />
       </Container>
     </div>
