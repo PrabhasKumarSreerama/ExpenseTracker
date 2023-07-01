@@ -3,6 +3,7 @@ import cors from "cors";
 import bodyParser from "body-parser";
 import TransactionRouters from "./routes/transactions.js";
 import connect from "./database/mangodb.js";
+import AuthApi from "./routes/authApi.js";
 
 const PORT = 4000;
 
@@ -17,6 +18,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/transaction", TransactionRouters);
+app.use("/auth", AuthApi);
 
 await connect();
 
