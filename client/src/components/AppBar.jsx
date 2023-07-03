@@ -23,11 +23,11 @@ export default function ButtonAppBar() {
               ExpenseTracker
             </Link>
           </Typography>
-          <Link className="text-white" onClick={logoutHandler}>
+          <div className="text-white">
             <Button color="inherit" onClick={logoutHandler}>
               Logout
             </Button>
-          </Link>
+          </div>
           <Link to="/login" className="text-white">
             <Button color="inherit">Login</Button>
           </Link>
