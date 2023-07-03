@@ -11,11 +11,12 @@ const Home = () => {
 
   useEffect(() => {
     fetchTransactionsHandler();
-  });
+  }, []);
 
   const fetchTransactionsHandler = async () => {
     const token = Cookies.get("token");
     const res = await fetch(`${process.env.REACT_APP_API_URL}/transaction`, {
+      method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
       },
