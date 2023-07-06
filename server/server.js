@@ -1,10 +1,8 @@
 import express from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
-import TransactionRouters from "./routes/transactionApi.js";
 import connect from "./database/mangodb.js";
-import AuthApi from "./routes/authApi.js";
-import UserApi from "./routes/UserApi.js";
+import routes from "./routes/index.js";
 import passport from "passport";
 import passportConfig from "./config/passport.js";
 import * as dotenv from "dotenv";
@@ -26,9 +24,7 @@ app.get("/", (req, res) => {
   res.send("Hello EverOne!");
 });
 
-app.use("/transaction", TransactionRouters);
-app.use("/auth", AuthApi);
-app.use("/user", UserApi);
+app.use("/", routes);
 
 await connect();
 
