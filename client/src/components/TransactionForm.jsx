@@ -15,7 +15,7 @@ const IntialForm = {
 };
 
 export default function TransactionForm({
-  fetchTransactionsHandler,
+  fetchTransactions,
   editTransaction,
 }) {
   const [form, setForm] = useState(IntialForm);
@@ -39,7 +39,7 @@ export default function TransactionForm({
   const reload = (res) => {
     if (res.ok) {
       setForm(IntialForm);
-      fetchTransactionsHandler();
+      fetchTransactions();
     }
   };
 
@@ -48,7 +48,8 @@ export default function TransactionForm({
       method: "POST",
       body: JSON.stringify(form),
       headers: {
-        "content-type": "application/json",
+        "Content-Type": "application/json",
+        Accept: "application/json",
       },
     });
     reload(res);
@@ -61,7 +62,8 @@ export default function TransactionForm({
         method: "PATCH",
         body: JSON.stringify(form),
         headers: {
-          "content-type": "application/json",
+          "Content-Type": "application/json",
+          Accept: "application/json",
         },
       }
     );

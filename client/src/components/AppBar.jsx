@@ -6,11 +6,16 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import { Link, useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
+import { useDispatch } from "react-redux";
+import { logout } from "../store/auth.js";
 
 export default function ButtonAppBar() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const logoutHandler = () => {
     Cookies.remove("token");
+    dispatch(logout());
     navigate("/login");
   };
 

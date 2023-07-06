@@ -11,8 +11,11 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
+import { useDispatch } from "react-redux";
+import { getUser } from "../store/auth.js";
 
 export default function Login() {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
@@ -26,12 +29,15 @@ export default function Login() {
       method: "POST",
       body: JSON.stringify(form),
       headers: {
-        "content-type": "application/json",
+        "Content-Type": "application/json",
       },
     });
-    const { token } = await res.json();
+    console.log(res);
+    const { token, user } = await res.json();
+    console.log(token);
     if (res.ok) {
       Cookies.set("token", token);
+      dispatch(getUser(user));
       navigate("/");
     }
   };

@@ -17,8 +17,8 @@ import dayjs from "dayjs";
 // }
 
 export default function TransactionsList({
-  transactions,
-  fetchTransactionsHandler,
+  data,
+  fetchTransactions,
   setEditTransaction,
 }) {
   const removeHandler = async (id) => {
@@ -30,7 +30,7 @@ export default function TransactionsList({
       }
     );
     if (res.ok) {
-      fetchTransactionsHandler();
+      fetchTransactions();
       window.alert("Deleted Successfully");
     }
   };
@@ -53,7 +53,7 @@ export default function TransactionsList({
             </TableRow>
           </TableHead>
           <TableBody>
-            {transactions.map((row) => (
+            {data.map((row) => (
               <TableRow
                 key={row._id}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
