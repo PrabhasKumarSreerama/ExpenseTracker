@@ -11,6 +11,7 @@ import EditNoteRoundedIcon from "@mui/icons-material/EditNoteRounded";
 import DeleteOutlineRoundedIcon from "@mui/icons-material/DeleteOutlineRounded";
 import IconButton from "@mui/material/IconButton";
 import dayjs from "dayjs";
+import Cookies from "js-cookie";
 
 // function createData(name, calories, fat, carbs, protein) {
 //   return { name, calories, fat, carbs, protein };
@@ -22,11 +23,15 @@ export default function TransactionsList({
   setEditTransaction,
 }) {
   const removeHandler = async (id) => {
+    const token = Cookies.get("token");
     if (!window.confirm("Are you sure?")) return;
     const res = await fetch(
       `${process.env.REACT_APP_API_URL}/transaction/${id}`,
       {
         method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       }
     );
     if (res.ok) {

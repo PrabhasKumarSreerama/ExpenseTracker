@@ -7,6 +7,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 import Button from "@mui/material/Button";
+import Cookies from "js-cookie";
 
 const IntialForm = {
   amount: "",
@@ -18,6 +19,7 @@ export default function TransactionForm({
   fetchTransactions,
   editTransaction,
 }) {
+  const token = Cookies.get("token");
   const [form, setForm] = useState(IntialForm);
 
   useEffect(() => {
@@ -49,7 +51,7 @@ export default function TransactionForm({
       body: JSON.stringify(form),
       headers: {
         "Content-Type": "application/json",
-        Accept: "application/json",
+        Authorization: `Bearer ${token}`,
       },
     });
     reload(res);
@@ -63,7 +65,7 @@ export default function TransactionForm({
         body: JSON.stringify(form),
         headers: {
           "Content-Type": "application/json",
-          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
         },
       }
     );

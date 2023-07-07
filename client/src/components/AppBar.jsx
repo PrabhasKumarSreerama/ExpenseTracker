@@ -6,11 +6,12 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import { Link, useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../store/auth.js";
 
 export default function ButtonAppBar() {
   const navigate = useNavigate();
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const dispatch = useDispatch();
 
   const logoutHandler = () => {
@@ -28,17 +29,23 @@ export default function ButtonAppBar() {
               ExpenseTracker
             </Link>
           </Typography>
-          <div className="text-white">
-            <Button color="inherit" onClick={logoutHandler}>
-              Logout
-            </Button>
-          </div>
-          <Link to="/login" className="text-white">
-            <Button color="inherit">Login</Button>
-          </Link>
-          <Link to="/register" className="text-white">
-            <Button color="inherit">Register</Button>
-          </Link>
+          {isAuthenticated && (
+            <div className="text-white">
+              <Button color="inherit" onClick={logoutHandler}>
+                Logout
+              </Button>
+            </div>
+          )}
+          {!isAuthenticated && (
+            <>
+              <Link to="/login" className="text-white">
+                <Button color="inherit">Login</Button>
+              </Link>
+              <Link to="/register" className="text-white">
+                <Button color="inherit">Register</Button>
+              </Link>
+            </>
+          )}
         </Toolbar>
       </AppBar>
     </Box>
