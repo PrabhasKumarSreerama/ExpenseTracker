@@ -1,23 +1,21 @@
-import * as React from "react";
-import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
-import TextField from "@mui/material/TextField";
-import Link from "@mui/material/Link";
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import Typography from "@mui/material/Typography";
+import Avatar from "@mui/material/Avatar";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
-import { Link as RouterLink, useNavigate } from "react-router-dom";
-import Cookies from "js-cookie";
+import Grid from "@mui/material/Grid";
+import Link from "@mui/material/Link";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
+import Cookie from "js-cookie";
+import * as React from "react";
 import { useDispatch } from "react-redux";
-import { getUser } from "../store/auth.js";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
+import { setUser } from "../store/auth.js";
 
 export default function Login() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -25,26 +23,26 @@ export default function Login() {
       email: data.get("email"),
       password: data.get("password"),
     };
+
     const res = await fetch(`${process.env.REACT_APP_API_URL}/auth/login`, {
       method: "POST",
       body: JSON.stringify(form),
       headers: {
-        "Content-Type": "application/json",
+        "content-type": "application/json",
       },
     });
-    console.log(res);
+
     const { token, user } = await res.json();
-    console.log(token);
+
     if (res.ok) {
-      Cookies.set("token", token);
-      dispatch(getUser(user));
+      Cookie.set("token", token);
+      dispatch(setUser(user));
       navigate("/");
     }
   };
 
   return (
-    <Container component="main" maxWidth="xs">
-      <CssBaseline />
+    <Container>
       <Box
         sx={{
           marginTop: 8,
@@ -92,7 +90,7 @@ export default function Login() {
             <Grid item>
               <RouterLink to="/register">
                 <Link component="span" variant="body2">
-                  {"Don't have an account? Register first"}
+                  {"Don't have an account? Sign Up"}
                 </Link>
               </RouterLink>
             </Grid>

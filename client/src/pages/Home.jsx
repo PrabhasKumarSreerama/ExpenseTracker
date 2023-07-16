@@ -1,7 +1,7 @@
 import Container from "@mui/material/Container";
 import Cookies from "js-cookie";
 import React, { useEffect, useState } from "react";
-// import TransactionChart from "../components/TransactionChart";
+import TransactionChart from "../components/TransactionChart";
 import TransactionForm from "../components/TransactionForm";
 import TransactionsList from "../components/TransactionsList";
 
@@ -20,17 +20,13 @@ export default function Home() {
         Authorization: `Bearer ${token}`,
       },
     });
-    if (!res.ok) {
-      console.log("I am the error");
-      console.log(res);
-    }
     const { data } = await res.json();
     setTransactions(data);
   }
 
   return (
     <Container>
-      {/* <TransactionChart data={transactions} /> */}
+      <TransactionChart data={transactions} />
 
       <TransactionForm
         fetchTransctions={fetchTransctions}

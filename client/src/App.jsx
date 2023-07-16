@@ -1,9 +1,9 @@
-import { useDispatch } from "react-redux";
-import AppBar from "./components/AppBar";
-import { Outlet } from "react-router-dom";
-import { useEffect, useState } from "react";
-import { getUser } from "./store/auth.js";
 import Cookies from "js-cookie";
+import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { Outlet } from "react-router-dom";
+import AppBar from "./components/AppBar";
+import { setUser } from "./store/auth.js";
 
 function App() {
   const token = Cookies.get("token");
@@ -20,8 +20,7 @@ function App() {
 
     if (res.ok) {
       const user = await res.json();
-      // console.log(user);
-      dispatch(getUser(user));
+      dispatch(setUser(user));
     }
     setIsLoading(false);
   }
@@ -31,8 +30,9 @@ function App() {
   }, []);
 
   if (isLoading) {
-    return <p>Loading... </p>;
+    return <p>Loading ...</p>;
   }
+
   return (
     <>
       <AppBar />

@@ -1,8 +1,9 @@
-import Login from "./pages/Login";
-import Home from "./pages/Home";
-import Register from "./pages/Register";
-import App from "./App";
 import { createBrowserRouter } from "react-router-dom";
+import App from "./App";
+import Category from "./pages/Category";
+import Home from "./pages/Home";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
 import CheckAuth from "./utils/CheckAuth";
 import Guest from "./utils/Guest";
 
@@ -17,7 +18,6 @@ export default createBrowserRouter([
             <Home />
           </CheckAuth>
         ),
-        // element: token ? <Home /> : <Navigate to="/login" replace={true} />,
       },
       {
         path: "/login",
@@ -33,6 +33,14 @@ export default createBrowserRouter([
           <Guest>
             <Register />
           </Guest>
+        ),
+      },
+      {
+        path: "/category",
+        element: (
+          <CheckAuth>
+            <Category />
+          </CheckAuth>
         ),
       },
     ],

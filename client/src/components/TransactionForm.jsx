@@ -1,26 +1,30 @@
-import { useEffect, useState } from "react";
+import Autocomplete from "@mui/material/Autocomplete";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
-import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import Typography from "@mui/material/Typography";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
-import Button from "@mui/material/Button";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import Cookies from "js-cookie";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 
-const IntialForm = {
-  amount: "",
+const InitialForm = {
+  amount: 0,
   description: "",
   date: new Date(),
+  category_id: "",
+  type: "expenses",
 };
 
-export default function TransactionForm({
-  fetchTransactions,
-  editTransaction,
-}) {
+export default function TransactionForm({ fetchTransctions, editTransaction }) {
+  const { categories } = useSelector((state) => state.auth.user);
   const token = Cookies.get("token");
-  const [form, setForm] = useState(IntialForm);
+  const [form, setForm] = useState(InitialForm);
+  const types = ["expense", "income", "transfer"];
 
   useEffect(() => {
     if (editTransaction.amount !== undefined) {
@@ -28,66 +32,84 @@ export default function TransactionForm({
     }
   }, [editTransaction]);
 
-  const handleChange = (event) => {
-    setForm({ ...form, [event.target.name]: event.target.value });
-  };
+  function handleChange(e) {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  }
 
-  const handleSubmitHandler = async (event) => {
-    event.preventDefault();
+  function handleDate(newValue) {
+    setForm({ ...form, date: newValue });
+  }
 
-    editTransaction.amount === undefined ? createHandler() : updateHandler();
-  };
+  async function handleSubmit(e) {
+    e.preventDefault();
+    editTransaction.amount === undefined ? create() : update();
+  }
 
-  const reload = (res) => {
+  function reload(res) {
     if (res.ok) {
-      setForm(IntialForm);
-      fetchTransactions();
+      setForm(InitialForm);
+      fetchTransctions();
     }
-  };
+  }
 
-  const createHandler = async () => {
+  async function create() {
     const res = await fetch(`${process.env.REACT_APP_API_URL}/transaction`, {
       method: "POST",
       body: JSON.stringify(form),
       headers: {
-        "Content-Type": "application/json",
+        "content-type": "application/json",
         Authorization: `Bearer ${token}`,
       },
     });
     reload(res);
-  };
+  }
 
-  const updateHandler = async () => {
+  async function update() {
     const res = await fetch(
       `${process.env.REACT_APP_API_URL}/transaction/${editTransaction._id}`,
       {
         method: "PATCH",
         body: JSON.stringify(form),
         headers: {
-          "Content-Type": "application/json",
+          "content-type": "application/json",
           Authorization: `Bearer ${token}`,
         },
       }
     );
     reload(res);
-  };
+  }
 
-  const handleDate = (newDate) => {
-    setForm({ ...form, date: newDate });
-  };
+  function getCategoryNameById() {
+    return (
+      categories.find((category) => category._id === form.category_id) ?? ""
+    );
+  }
 
   return (
     <Card sx={{ minWidth: 275, marginTop: 10 }}>
       <CardContent>
         <Typography variant="h6">Add New Transaction</Typography>
-        <form onSubmit={handleSubmitHandler}>
+        <Box component="form" onSubmit={handleSubmit} sx={{ display: "flex" }}>
+          <Autocomplete
+            value={form.type}
+            onChange={(event, newValue) => {
+              setForm({ ...form, type: newValue });
+            }}
+            id="type"
+            options={types}
+            sx={{ width: 200, marginRight: 5 }}
+            renderInput={(params) => (
+              <TextField {...params} size="small" label="Type" />
+            )}
+          />
           <TextField
             sx={{ marginRight: 5 }}
             id="outlined-basic"
             label="Amount"
+            type="number"
             size="small"
-            variant="outlined"
             name="amount"
+            variant="outlined"
             value={form.amount}
             onChange={handleChange}
           />
@@ -96,8 +118,8 @@ export default function TransactionForm({
             id="outlined-basic"
             label="Description"
             size="small"
-            variant="outlined"
             name="description"
+            variant="outlined"
             value={form.description}
             onChange={handleChange}
           />
@@ -105,29 +127,39 @@ export default function TransactionForm({
             <DesktopDatePicker
               label="Transaction Date"
               inputFormat="MM/DD/YYYY"
-              sx={{ marginRight: 5 }}
               value={form.date}
               onChange={handleDate}
               renderInput={(params) => (
-                <TextField
-                  sx={{ marginRight: 5, padding: 0 }}
-                  size="small"
-                  {...params}
-                />
+                <TextField sx={{ marginRight: 5 }} size="small" {...params} />
               )}
             />
           </LocalizationProvider>
+
+          <Autocomplete
+            value={getCategoryNameById()}
+            onChange={(event, newValue) => {
+              setForm({ ...form, category_id: newValue._id });
+            }}
+            id="controllable-states-demo"
+            options={categories}
+            sx={{ width: 200, marginRight: 5 }}
+            renderInput={(params) => (
+              <TextField {...params} size="small" label="Category" />
+            )}
+          />
+
           {editTransaction.amount !== undefined && (
-            <Button type="submit" variant="outlined">
+            <Button type="submit" variant="secondary">
               Update
             </Button>
           )}
+
           {editTransaction.amount === undefined && (
             <Button type="submit" variant="contained">
-              Add
+              Submit
             </Button>
           )}
-        </form>
+        </Box>
       </CardContent>
     </Card>
   );

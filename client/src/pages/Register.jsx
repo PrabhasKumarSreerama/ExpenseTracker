@@ -1,15 +1,14 @@
-import * as React from "react";
-import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
-import TextField from "@mui/material/TextField";
-import Link from "@mui/material/Link";
-import { Link as RouterLink, useNavigate } from "react-router-dom";
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import Typography from "@mui/material/Typography";
+import Avatar from "@mui/material/Avatar";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
+import Grid from "@mui/material/Grid";
+import Link from "@mui/material/Link";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
+import * as React from "react";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 
 export default function Register() {
   const navigate = useNavigate();
@@ -23,22 +22,21 @@ export default function Register() {
       email: data.get("email"),
       password: data.get("password"),
     };
+
     const res = await fetch(`${process.env.REACT_APP_API_URL}/auth/register`, {
       method: "POST",
       body: JSON.stringify(form),
       headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
+        "content-type": "application/json",
       },
     });
     if (res.ok) {
-      navigate("/login");
+      navigate("/");
     }
   };
 
   return (
-    <Container component="main" maxWidth="xs">
-      <CssBaseline />
+    <Container>
       <Box
         sx={{
           marginTop: 8,
@@ -110,7 +108,7 @@ export default function Register() {
             <Grid item>
               <RouterLink to="/login">
                 <Link component="span" variant="body2">
-                  Already have an account? Login instead
+                  Already have an account? Sign in
                 </Link>
               </RouterLink>
             </Grid>
